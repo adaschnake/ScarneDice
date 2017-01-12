@@ -1,5 +1,7 @@
 package com.example.demouser.scarnesdice;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     Button rollButton;
     Button holdButton;
     ImageView dieView;
+    public static String userScore;
+    public static String compScore;
+
+    int numRolls = 0;
+    final Handler timerHandler = new Handler();
 
 
 
@@ -37,33 +44,34 @@ public class MainActivity extends AppCompatActivity {
         rollButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roll(v);
+                roll();
             }
         });
 
         holdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hold(v);
+                hold();
             }
         });
 
         ((Button)findViewById(R.id.resetButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset(v);
+                reset();
             }
         });
 
     }
 
 
-    public void roll(View view)
+    public void roll()
     {
         int roll = random.nextInt(6)+1;
 
-        //((TextView)findViewById(R.id.dieRoll)).setText(""+roll);
+
         showDie(roll);
+        numRolls +=1;
 
         if (roll == 1)
         {
@@ -77,49 +85,66 @@ public class MainActivity extends AppCompatActivity {
         updateCurrentTurn();
 
 
-        checkWinners(view);
+        checkWinners();
     }
 
     private void showDie(int roll) {
 
-        if (roll==1)
+        if (roll == 1) {
             dieView.setImageResource(R.drawable.dice1);
-        else if (roll==2)
+            dieView.setContentDescription("Die face showing 1");
+        } else if (roll == 2)
+        {
             dieView.setImageResource(R.drawable.dice2);
+            dieView.setContentDescription("Die face showing 2");
+        }
         else if (roll==3)
+        {
             dieView.setImageResource(R.drawable.dice3);
-        else if (roll==4)
+            dieView.setContentDescription("Die face showing 3");
+        }
+            else if (roll==4)
+        {
             dieView.setImageResource(R.drawable.dice4);
-        else if (roll==5)
+            dieView.setContentDescription("Die face showing 4");
+        }
+            else if (roll==5)
+        {
             dieView.setImageResource(R.drawable.dice5);
-        else
+            dieView.setContentDescription("Die face showing 5");
+        }
+            else
+        {
             dieView.setImageResource(R.drawable.dice6);
+            dieView.setContentDescription("Die face showing 6");
+        }
 
 
-    }
+        }
 
-    private void checkWinners(View v) {
+    private void checkWinners() {
 
         if (currentPlayer ==1 && player1Total+currentTurn >= 50)
         {
-            ((TextView)findViewById(R.id.otherInfo)).setText("Player 1 wins!");
-            rollButton.setEnabled(false);
-            holdButton.setEnabled(false);
-            currentPlayer=0;
+            Intent intent = new Intent(this, WinActivity.class);
+            intent.putExtra(userScore, String.valueOf((player1Total+currentTurn)));
+            startActivity(intent);
+            reset();
+
         }
 
         else if (currentPlayer == 2 && player2Total+currentTurn >= 50)
         {
-            ((TextView)findViewById(R.id.otherInfo)).setText("Player 2 wins!");
-            rollButton.setEnabled(false);
-            holdButton.setEnabled(false);
-            currentPlayer = 0;
+            Intent intent = new Intent(this, LoseActivity.class);
+            intent.putExtra(compScore, String.valueOf((player2Total+currentTurn)));
+            startActivity(intent);
+            reset();
         }
 
     }
 
 
-    public void hold(View view)
+    public void hold()
     {
         if (currentPlayer == 1)
         {
@@ -137,12 +162,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void reset(View view)
+    public void reset()
     {
         currentTurn = 0;
         player1Total = 0;
         player2Total = 0;
         currentPlayer=1;
+        ((TextView)findViewById(R.id.otherInfo)).setText(String.format(getString(R.string.turnText), currentPlayer));
         updatePlayerScores();
         updateCurrentTurn();
         ((TextView)findViewById(R.id.otherInfo)).setText("");
@@ -165,23 +191,55 @@ public class MainActivity extends AppCompatActivity {
 
     private void changePlayers()
     {
-        if (currentPlayer==1)
-            currentPlayer=2;
+        if (currentPlayer==1) {
+            currentPlayer = 2;
+            computerTurnin500();
+            rollButton.setEnabled(false);
+            holdButton.setEnabled(false);
 
-        else if (currentPlayer==2)
-            currentPlayer=1;
+        }
 
-        ((TextView)findViewById(R.id.otherInfo)).setText("Player "+currentPlayer+"'s turn!");
+        else if (currentPlayer==2) {
+            currentPlayer = 1;
+            rollButton.setEnabled(true);
+            holdButton.setEnabled(true);
+        }
+
+
+        numRolls=0;
+        ((TextView)findViewById(R.id.otherInfo)).setText(String.format(getString(R.string.turnText), currentPlayer));
     }
 
     private boolean shouldHold()
     {
-
+        if((((double)currentTurn)/((double)numRolls) >= 4) && numRolls >3)
+            return true;
+        else if (currentTurn>5)
+            return true;
+        else
+            return false;
     }
 
     private void computerTurnin500()
     {
-        
+        timerHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                computerTurn();
+                if (currentPlayer==2)
+                {
+                    computerTurnin500();
+                }
+            }
+        },1000);
+    }
+
+    private void computerTurn() {
+        roll();
+        if (shouldHold())
+        {
+            hold();
+        }
     }
 
 }
