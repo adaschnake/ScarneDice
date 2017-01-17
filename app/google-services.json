@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "178582263715",
+    "firebase_url": "https://scarnes-dice-fa397.firebaseio.com",
+    "project_id": "scarnes-dice-fa397",
+    "storage_bucket": "scarnes-dice-fa397.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178582263715:android:a168ee92baf4c0eb",
+        "android_client_info": {
+          "package_name": "com.example.demouser.scarnesdice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178582263715-cflfr79sn5gv231fr9125hrbs0f7vmco.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demouser.scarnesdice",
+            "certificate_hash": "6D8360D4FAE896444083273427C3964C3CFAA9A7"
+          }
+        },
+        {
+          "client_id": "178582263715-r99q0a75n0r8c8jccnaavulct6ilh8nu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8pM8KTm5WWDbzhK31PEWgHHkxx2vfnxw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178582263715-r99q0a75n0r8c8jccnaavulct6ilh8nu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
