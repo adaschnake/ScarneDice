@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     public static String userScore;
     public static String compScore;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String mUserEmail;
+
     int numRolls = 0;
     final Handler timerHandler = new Handler();
 
@@ -32,6 +40,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if(mFirebaseUser == null)
+        {
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return;
+        }
+        else
+        {
+            mUserEmail = mFirebaseUser.getEmail();
+        }
+
         setContentView(R.layout.activity_main);
         rollButton = (Button)findViewById(R.id.rollButton);
         holdButton = (Button)findViewById(R.id.holdButton);

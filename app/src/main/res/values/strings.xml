@@ -3,6 +3,6 @@
     <string name="winner1">Player 1 wins!</string>
     <string name="winner2">Player 2 wins!</string>
     <string name="turnText">Player %d\'s turn!</string>
-
+    <string name="sign_in">Sign In</string>
 
 </resources>
